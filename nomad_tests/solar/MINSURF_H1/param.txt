@@ -1,0 +1,35 @@
+# Number of variables
+DIMENSION 14
+
+# Black box
+BB_EXE "$/home/sblelong/dev/solar/bin/solar $2"
+BB_OUTPUT_TYPE OBJ EB EB EB EB EB EB EB EB EB EB EB EB
+BB_INPUT_TYPE (    R    R     R    R    R    I    R    R     R     R    I    R      R      R )
+
+# Starting point
+X0 ( 11.0 11.0 140.0 10.0 10.0 2650 89.0  0.5   5.0 838.0   36 0.30  0.020 0.0216 )
+
+# Bounds are useful to avoid extreme values
+LOWER_BOUND (  1.0  1.0  20.0  1.0  1.0    1  1.0  0.0   1.0 793.0    1 0.01  0.005 0.0050 )
+UPPER_BOUND ( 40.0 40.0 250.0 30.0 30.0    - 89.0 20.0  20.0 995.0 9424 5.00  0.100 0.1000 )
+
+
+# ALGORITHM PARAMETERS
+######################
+
+# The algorithm terminates after that number black-box evaluations
+MAX_BB_EVAL 1000
+
+# The algorithm terminates after that total number of evaluations,
+# including cache hits
+# MAX_EVAL 200
+
+# Formatted stats into a file
+STATS_FILE stats_EB.txt BBE OBJ
+
+# History file (just inputs and outputs)
+# HISTORY_FILE history.txt
+
+# Solution file (just best inputs found)
+#SOLUTION_FILE sol.txt
+
