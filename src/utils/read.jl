@@ -1,7 +1,7 @@
 using DFOTools
 using DelimitedFiles
 
-export read_data, find_dimensions
+export read_data, find_dimensions, compute_optimals, compute_initials
 
 """
 Current state, to be modified to handle all kinds of data preprocessing.
@@ -39,7 +39,7 @@ function read_data(dir::String; filename::String="history.0.txt")::Dict{Int,Vect
     # For each instance
     for file in files
         # Intermediate table: will gather all the clean data
-        raw_data = readdlm(joinpath(dir, file, filename))
+        raw_data = readdlm(joinpath(dir, file))
         preprocessed_data = preprocess_data(raw_data)
         data[parse(Int, splitext(file)[1])] = preprocessed_data
     end
@@ -57,4 +57,51 @@ function find_dimensions(dir::String; filename::String="history.0.txt")::Dict{In
     end
 
     return dimensions
+end
+
+function compute_optimals(data::Vector{Dict{Int,Vector{Float64}}})::Dict{Int,Float64}
+    n_algs = length(data)
+    n_instances = length(data[1])
+
+    optimals = Dict{Int,Float64}()
+
+    for instance in 1:n_instances
+        algs_optimals = Float64[]
+        for alg in 1:n_algs
+            if instance in keys(data[alg])
+                push!(algs_optimals, minimum(data[alg][instance]))
+            end
+        end
+
+        if length(algs_optimals) ≥ 1
+            optimals[instance] = minimum(algs_optimals)
+        else
+            optimals[instance] = typemax(Float64)
+        end
+    end
+
+    return optimals
+end
+
+function compute_initials(data::Vector{Dict{Int,Vector{Float64}}})::Dict{Int,Float64}
+    n_algs = length(data)
+    n_instances = length(data[1])
+
+    initials = Dict{Int,Float64}()
+
+    for instance in 1:n_instances
+        initials_algs = Float64[]
+        for alg in 1:n_algs
+            if instance in keys(data[alg])
+                push!(initials_algs, data[alg][instance][1])
+            end
+        end
+        if length(initials_algs) ≥ 1
+            initials[instance] = minimum(initials_algs)
+        else
+            initials[instance] = typemax(Float64)
+        end
+    end
+
+    return initials
 end

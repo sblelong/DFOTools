@@ -1,4 +1,4 @@
-export performance_profile, compute_optimals
+export performance_profile
 
 using Plots
 using LaTeXStrings
@@ -34,11 +34,13 @@ function performance_profile(data::Vector{Dict{Int,Vector{Float64}}}, algs_names
 
     for alg in 1:n_algs
         for instance in 1:n_instances
-            f0 = data[alg][instance][1]
-            instance_opt = optimals[instance]
-            a_has_solved_p = data[alg][instance] .≤ instance_opt + τ * (f0 - instance_opt)
-            if any(a_has_solved_p .== 1)
-                smallest_solved_iterations[alg, instance] = findfirst(a_has_solved_p .== 1)
+            if instance in keys(data[alg])
+                f0 = data[alg][instance][1]
+                instance_opt = optimals[instance]
+                a_has_solved_p = data[alg][instance] .≤ instance_opt + τ * (f0 - instance_opt)
+                if any(a_has_solved_p .== 1)
+                    smallest_solved_iterations[alg, instance] = findfirst(a_has_solved_p .== 1)
+                end
             end
         end
     end
@@ -63,8 +65,6 @@ function performance_profile(data::Vector{Dict{Int,Vector{Float64}}}, algs_names
         end
     end
 
-    return smallest_solved_iterations
-
     # 4. Compute the values of the performance profile function
     αs = range(1, stop=α_max, length=100)
     ρ = fill(0.0, (n_algs, length(αs)))
@@ -76,33 +76,17 @@ function performance_profile(data::Vector{Dict{Int,Vector{Float64}}}, algs_names
 
     # 5. If desired, plot the performance profile
     if return_plot
-        p = plot(size=(900, 450))
+        p = plot(size=(700, 450))
         for alg in 1:n_algs
-            plot!(αs, ρ[alg, :], label=algs_names[alg], seriestype=:steppost, dpi=700, xtickfontsize=12, ytickfontsize=12)
+            plot!(αs, ρ[alg, :], label=algs_names[alg], ylimits=(0, 1), seriestype=:steppost, dpi=700, xtickfontsize=12, ytickfontsize=12)
         end
         xlabel!("Ratio of function evaluations " * L"\alpha")
         ylabel!("Portion of " * L"\tau" * "-solved instances " * L"\rho_a(\alpha)")
         # title!("Performance Profile on a set of $n_instances problems")
-    end
 
-    if return_plot
         return (ρ, p)
-    else
-        return ρ
     end
 
-end
+    return ρ
 
-function compute_optimals(data::Vector{Dict{Int,Vector{Float64}}})::Dict{Int,Float64}
-    n_algs = length(data)
-    n_instances = length(data[1])
-
-    optimals = Dict{Int,Float64}()
-
-    for instance in 1:n_instances
-        algs_optimals = [minimum(data[alg][instance]) for alg in 1:n_algs]
-        optimals[instance] = minimum(algs_optimals)
-    end
-
-    return optimals
 end

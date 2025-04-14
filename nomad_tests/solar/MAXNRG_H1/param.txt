@@ -2,7 +2,7 @@
 DIMENSION 9
 
 # Black box
-BB_EXE "$/home/sblelong/dev/solar/bin/solar $1"
+BB_EXE "$/home/sblelong/dev/solar/bin/solar $1 $-seed=50"
 BB_OUTPUT_TYPE OBJ PB PB PB PB PB
 BB_INPUT_TYPE (R R R R R  I R R R)
 
@@ -25,7 +25,7 @@ MAX_BB_EVAL 1000
 # MAX_EVAL 200
 
 # Formatted stats into a file
-STATS_FILE stats_PB.txt BBE OBJ
+STATS_FILE "/home/sblelong/dev/DFOTools/stats_PB.txt" BBE OBJ BBO
 
 # History file (just inputs and outputs)
 # HISTORY_FILE history.txt

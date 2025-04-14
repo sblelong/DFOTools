@@ -20,11 +20,13 @@ function data_profile(data::Vector{Dict{Int,Vector{Float64}}}, dimensions::Dict{
 
     for alg in 1:n_algs
         for instance in 1:n_instances
-            f0 = data[alg][instance][1]
-            instance_opt = optimals[instance]
-            a_has_solved_p = data[alg][instance] .≤ instance_opt + τ * (f0 - instance_opt)
-            if any(a_has_solved_p .== 1)
-                smallest_solved_iterations[alg, instance] = findfirst(a_has_solved_p .== 1)
+            if instance in keys(data[alg])
+                f0 = data[alg][instance][1]
+                instance_opt = optimals[instance]
+                a_has_solved_p = data[alg][instance] .≤ instance_opt + τ * (f0 - instance_opt)
+                if any(a_has_solved_p .== 1)
+                    smallest_solved_iterations[alg, instance] = findfirst(a_has_solved_p .== 1)
+                end
             end
         end
     end
@@ -42,9 +44,9 @@ function data_profile(data::Vector{Dict{Int,Vector{Float64}}}, dimensions::Dict{
     end
 
     if return_plot
-        p = plot(size=(900, 450))
+        p = plot(size=(700, 450))
         for alg in 1:n_algs
-            plot!(ks, dp_data[alg, :], label=algs_names[alg], seriestype=:steppost, dpi=700, xtickfontsize=12, ytickfontsize=12)
+            plot!(ks, dp_data[alg, :], label=algs_names[alg], ylimits=(0, 1), seriestype=:steppost, dpi=700, xtickfontsize=12, ytickfontsize=12)
         end
         xlabel!("Groups of " * L"(n_p+1)" * " evaluations " * L"k")
         ylabel!("Portion of " * L"\tau" * "-solved instances " * L"d_a(k)")
