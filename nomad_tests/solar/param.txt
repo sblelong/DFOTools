@@ -2,8 +2,8 @@
 DIMENSION 9
 
 # Black box
-BB_EXE "$/home/sblelong/dev/solar/bin/solar $1 $-seed=18000"
-BB_OUTPUT_TYPE OBJ EB EB EB EB EB
+BB_EXE "$/Users/sacha/dev/solar/bin/solar $1 $-seed=0"
+BB_OUTPUT_TYPE OBJ PB PB PB PB PB
 BB_INPUT_TYPE (R R R R R  I R R R)
 
 # Starting point
@@ -25,7 +25,7 @@ MAX_BB_EVAL 500
 # MAX_EVAL 200
 
 # Formatted stats into a file
-STATS_FILE "/home/sblelong/dev/DFOTools/nomad_tests/solar/EB/18000/stats.txt" BBE OBJ BBO
+STATS_FILE "/Users/sacha/dev/DFOTools/nomad_tests/solar/PB/0/stats.txt" BBE OBJ BBO
 
 # History file (just inputs and outputs)
 # HISTORY_FILE history.txt
